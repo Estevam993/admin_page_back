@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { RolesModule } from './roles/roles.module';
 import { ModulesModule } from './modules/modules.module';
 import { SeederModule } from './database/seeders/seeder.module';
+import { EmployeeModule } from './employee/employee.module';
+import { DepartmentModule } from './department/department.module';
 
 @Module({
   imports: [
@@ -26,7 +28,9 @@ import { SeederModule } from './database/seeders/seeder.module';
     AuthModule,
     RolesModule,
     ModulesModule,
-    SeederModule
+    SeederModule,
+    EmployeeModule,
+    DepartmentModule
   ],
 })
 export class AppModule {}

@@ -1,4 +1,4 @@
-import { IsString, IsEmail, MinLength, IsOptional, IsArray } from 'class-validator';
+import { IsString,  IsArray } from 'class-validator';
 
 export class CreateRoleDto {
   @IsString()

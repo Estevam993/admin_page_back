@@ -16,8 +16,9 @@ export class Role extends Model<Role> {
   label: string;
 
   @Column({
-    type: DataType.ARRAY,
+    type: DataType.ARRAY(DataType.INTEGER),
     allowNull: false,
+    defaultValue: [],
   })
-  modules: Number[];
+  modules: number[];
 }

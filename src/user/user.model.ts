@@ -31,6 +31,12 @@ export class User extends Model<User> {
 
   @AllowNull(false)
   @Column({
+    type: DataType.INTEGER,
+  })
+  role: number;
+
+  @AllowNull(false)
+  @Column({
     type: DataType.STRING,
   })
   password: string;
@@ -51,7 +57,8 @@ export class User extends Model<User> {
   }
 
   async checkPassword(plainPassword: string): Promise<boolean> {
-    return compareSync(plainPassword, this.password);
+    const validPassword = await compareSync(plainPassword, this.password)
+    return validPassword;
   }
 
   async updateWithPassword(fieldsToUpdate: Partial<User>): Promise<void> {

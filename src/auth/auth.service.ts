@@ -10,29 +10,28 @@ export class AuthService {
   ) {}
 
   async validateUser(email: string, plainPassword: string): Promise<any> {
-    if (!email || !plainPassword) {
+    if (!email || !plainPassword)
       return {
         status: 'error',
         message: `Credenciais inválidas`,
       };
-    }
 
     const user = await this.usersService.findByEmailOrName(email);
-    if (!user) {
+
+    if (!user)
       return {
         status: 'error',
         message: `Credenciais inválidas`,
       };
-    }
 
     // Verifica a senha
     const isPasswordValid: boolean = await user.checkPassword(plainPassword);
-    if (!isPasswordValid) {
+
+    if (!isPasswordValid)
       return {
         status: 'error',
         message: `Credenciais inválidas`,
       };
-    }
 
     const id = user.id;
     const userEmail = user.email;
@@ -40,7 +39,13 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const [id, userEmail] = await this.validateUser(email, password);
+    const result = await this.validateUser(email, password);
+
+    if ('status' in result && result.status === 'error') {
+      return result;
+    }
+
+    const [id, userEmail] = result;
 
     const payload = { sub: id, email: userEmail };
     return {

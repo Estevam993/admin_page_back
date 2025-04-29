@@ -20,6 +20,7 @@ export class UserSeeder {
         name: 'Admin',
         email: 'Admin@admin.com',
         password: hashedPassword,
+        role: 1,
         status: 'active',
       });
 

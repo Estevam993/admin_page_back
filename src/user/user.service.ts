@@ -39,6 +39,8 @@ export class UserService {
     }
 
     try {
+      user.role = 1;
+
       const userRequest = await this.userRepository.create(user as any);
 
       return {
@@ -145,14 +147,15 @@ export class UserService {
   }
 
   async findByEmailOrName(search: string): Promise<User | null> {
-    return this.userRepository.findOne({
-      where: {
-        [Op.or]: [
-          { email: search },
-          { name: search }
-        ]
-      }
-    });
+    try {
+      return this.userRepository.findOne({
+        where: {
+          [Op.or]: [{ email: search }, { name: search }],
+        },
+      });
+    } catch (e) {
+      return null;
+    }
   }
 
   validateName(name: string): boolean {

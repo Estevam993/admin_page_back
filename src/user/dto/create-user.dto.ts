@@ -1,4 +1,4 @@
-import { IsString, IsEmail, MinLength, IsOptional } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsOptional, IsNumber } from 'class-validator';
 
 export class CreateUserDto {
   // São as propriedades do meu usuario
@@ -10,6 +10,9 @@ export class CreateUserDto {
 
   @IsString()
   status: string;
+
+  @IsNumber()
+  role: number;
 
   @IsString()
   @MinLength(6)

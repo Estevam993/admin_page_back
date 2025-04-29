@@ -10,24 +10,32 @@ export class ModuleSeeder {
   ) {}
 
   async seed() {
-    const modules = [
-      {
-        name: 'Dashboard',
-        path: '/dashboard',
-        icon: 'dashboard',
-      },
-      {
-        name: 'Usuários',
-        path: '/users',
-        icon: 'users',
-      },
-      {
-        name: 'Cargos',
-        path: '/roles',
-        icon: 'shield',
-      },
-    ];
+    // First check if there are any existing records
+    const count = await this.moduleModel.count();
 
-    await this.moduleModel.bulkCreate(modules);
+    if (count === 0) {
+      const modules = [
+        {
+          name: 'Dashboard',
+          path: '/dashboard',
+          icon: 'dashboard',
+        },
+        {
+          name: 'Usuários',
+          path: '/users',
+          icon: 'users',
+        },
+        {
+          name: 'Cargos',
+          path: '/roles',
+          icon: 'shield',
+        },
+      ];
+
+      await this.moduleModel.bulkCreate(modules);
+      console.log('Modules seeded successfully');
+    } else {
+      console.log('Modules already exist, skipping seed');
+    }
   }
 }
