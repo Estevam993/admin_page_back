@@ -1,9 +1,9 @@
-import { IsString,  IsArray } from 'class-validator';
+import { IsString, IsArray } from "class-validator";
 
 export class CreateRoleDto {
-  @IsString()
-  label: string;
+    @IsString()
+    label: string;
 
-  @IsArray()
-  modules: Number[];
+    @IsArray()
+    modules: Number[];
 }

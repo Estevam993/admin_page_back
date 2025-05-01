@@ -1,24 +1,14 @@
-import {
-  Column,
-  Table,
-  Model,
-  BelongsToMany,
-  DataType,
-  ForeignKey,
-} from 'sequelize-typescript';
+import { Column, Table, Model, DataType, HasMany } from "sequelize-typescript";
+import { Employee } from "../../employee/entities/employee.entity";
 
-@Table({ tableName: 'roles' })
+@Table({ tableName: "roles" })
 export class Role extends Model<Role> {
-  @Column({
-    type: DataType.STRING,
-    allowNull: false,
-  })
-  label: string;
+    @Column({
+        type: DataType.STRING,
+        allowNull: false,
+    })
+    label: string;
 
-  @Column({
-    type: DataType.ARRAY(DataType.INTEGER),
-    allowNull: false,
-    defaultValue: [],
-  })
-  modules: number[];
+    @HasMany(() => Employee)
+    employees: Employee[];
 }
