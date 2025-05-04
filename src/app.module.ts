@@ -8,6 +8,7 @@ import { RolesModule } from "./roles/roles.module";
 import { SeederModule } from "./database/seeders/seeder.module";
 import { EmployeeModule } from "./employee/employee.module";
 import { DepartmentModule } from "./department/department.module";
+import { ParametersModule } from "./parameters/parameters.module";
 
 @Module({
     imports: [
@@ -29,6 +30,7 @@ import { DepartmentModule } from "./department/department.module";
         SeederModule,
         EmployeeModule,
         DepartmentModule,
+        ParametersModule,
     ],
 })
 export class AppModule {}

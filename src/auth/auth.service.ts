@@ -2,6 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { UserService } from "../user/user.service";
 import { JwtService } from "@nestjs/jwt";
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
+
 @Injectable()
 export class AuthService {
     constructor(
@@ -36,7 +37,11 @@ export class AuthService {
 
         const id = user.id;
         const userEmail = user.email;
-        return [id, userEmail];
+        const userRole = user.role;
+        const userStatus = user.status;
+        const userName = user.name;
+
+        return [id, userEmail, userRole, userStatus, userName];
     }
 
     async login(email: string, password: string) {
@@ -46,11 +51,15 @@ export class AuthService {
             return result;
         }
 
-        const [id, userEmail] = result;
+        const [id, userEmail, userRole, userStatus, userName] = result;
 
         const payload = { sub: id, email: userEmail };
         return {
             id: id,
+            name: userName,
+            email: userEmail,
+            role: userRole,
+            status: userStatus,
             access_token: this.jwtService.sign(payload),
         };
     }

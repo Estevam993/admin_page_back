@@ -10,6 +10,7 @@ import {
 } from "sequelize-typescript";
 import { Role } from "../../roles/entities/role.entity";
 import { Department } from "../../department/entities/department.entity";
+import { User } from "../../user/user.model";
 
 @Table({ tableName: "employees" })
 export class Employee extends Model<Employee> {
@@ -50,6 +51,16 @@ export class Employee extends Model<Employee> {
 
     @BelongsTo(() => Department)
     departmentDetails: Department;
+
+    @AllowNull(false)
+    @ForeignKey(() => User)
+    @Column({
+        type: DataType.INTEGER,
+    })
+    user: number;
+
+    @BelongsTo(() => User)
+    userDetails: Department;
 
     async disable(fieldsToUpdate: Partial<Employee>): Promise<void> {
         fieldsToUpdate.status = "INACTIVE";

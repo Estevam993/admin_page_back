@@ -1,10 +1,11 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, Req } from "@nestjs/common";
 import { CreateEmployeeDto } from "./dto/create-employee.dto";
 import { UpdateEmployeeDto } from "./dto/update-employee.dto";
 import { InjectModel } from "@nestjs/sequelize";
 import { Employee } from "./entities/employee.entity";
 import { Role } from "../roles/entities/role.entity";
 import { Department } from "../department/entities/department.entity";
+import { User } from "../user/user.model";
 
 @Injectable()
 export class EmployeeService {
@@ -13,12 +14,13 @@ export class EmployeeService {
         private employeeRepository: typeof Employee,
     ) {}
 
-    async create(createEmployeeDto: CreateEmployeeDto) {
+    async create(createEmployeeDto: CreateEmployeeDto, userId) {
         const validation = await this.insertValidation(createEmployeeDto);
 
         if (validation.status === "error") return validation;
 
         try {
+            createEmployeeDto.user = userId;
             const employeeResponse: Employee =
                 await this.employeeRepository.create(createEmployeeDto);
 
@@ -35,11 +37,11 @@ export class EmployeeService {
         }
     }
 
-    async findAll() {
+    async findAll(userId: number) {
         try {
             const employees = await this.employeeRepository.findAll({
                 attributes: ["id", "name", "email"],
-                where: { status: "ACTIVE" },
+                where: { status: "ACTIVE", user: userId },
                 include: [
                     {
                         model: Role,
@@ -52,6 +54,12 @@ export class EmployeeService {
                         as: "departmentDetails",
                         required: true,
                         attributes: ["id", "label"],
+                    },
+                    {
+                        model: User,
+                        as: "userDetails",
+                        required: true,
+                        attributes: ["id", "name"],
                     },
                 ],
             });
@@ -68,10 +76,11 @@ export class EmployeeService {
         }
     }
 
-    async findOne(id: number) {
+    async findOne(id: number, userId: number) {
         try {
-            const employee = await this.employeeRepository.findByPk(id, {
-                attributes: ["id", "name", "email"],
+            const employee = await this.employeeRepository.findOne({
+                attributes: ["id", "name", "email", "user"],
+                where: { id, user: userId },
                 include: [
                     {
                         model: Role,
@@ -85,11 +94,23 @@ export class EmployeeService {
                         required: true,
                         attributes: ["id", "label"],
                     },
+                    {
+                        model: User,
+                        as: "userDetails",
+                        required: true,
+                        attributes: ["id", "name"],
+                    },
                 ],
             });
+            if (employee)
+                return {
+                    status: "success",
+                    employee: employee,
+                };
+
             return {
-                status: "success",
-                employee: employee,
+                status: "error",
+                employee: "Employee not found",
             };
         } catch (e) {
             return {
@@ -106,10 +127,12 @@ export class EmployeeService {
                 { where: { id } },
             );
 
-            return {
-                status: "success",
-                message: `Employee with ID ${id} updated successfully`,
-            };
+            if (success) {
+                return {
+                    status: "success",
+                    message: `Employee with ID ${id} updated successfully`,
+                };
+            }
         } catch (e) {
             return {
                 status: "error",

@@ -15,4 +15,7 @@ export class CreateEmployeeDto {
 
     @IsNumber()
     department: number;
+
+    @IsNumber()
+    user: number;
 }

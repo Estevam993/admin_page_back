@@ -5,6 +5,8 @@ import {
     IsOptional,
     IsNumber,
 } from "class-validator";
+import { HasMany } from "sequelize-typescript";
+import { Employee } from "../../employee/entities/employee.entity";
 
 export class CreateUserDto {
     // São as propriedades do meu usuario
@@ -23,4 +25,7 @@ export class CreateUserDto {
     @IsString()
     @MinLength(6)
     password: string;
+
+    @HasMany(() => Employee)
+    employees: Employee[];
 }

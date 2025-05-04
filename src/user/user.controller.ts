@@ -4,7 +4,7 @@ import {
     Post,
     Body,
     Param,
-    Delete,
+    Delete, Req,
 } from "@nestjs/common";
 import { UserService } from "./user.service";
 import { CreateUserDto } from "./dto/create-user.dto";
