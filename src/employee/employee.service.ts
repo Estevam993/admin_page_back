@@ -21,6 +21,7 @@ export class EmployeeService {
 
         try {
             createEmployeeDto.user = userId;
+
             const employeeResponse: Employee =
                 await this.employeeRepository.create(createEmployeeDto);
 
@@ -127,7 +128,7 @@ export class EmployeeService {
                 { where: { id } },
             );
 
-            if (success) {
+            if (!!success) {
                 return {
                     status: "success",
                     message: `Employee with ID ${id} updated successfully`,
