@@ -6,6 +6,7 @@ import { Employee } from "./entities/employee.entity";
 import { Role } from "../roles/entities/role.entity";
 import { Department } from "../department/entities/department.entity";
 import { User } from "../user/user.model";
+import { Op } from "sequelize";
 
 @Injectable()
 export class EmployeeService {
@@ -122,6 +123,10 @@ export class EmployeeService {
     }
 
     async update(id: number, updateEmployeeDto: UpdateEmployeeDto) {
+        const validation = await this.updateValidation(updateEmployeeDto, id);
+
+        if (validation.status === "error") return validation;
+
         try {
             const success = await this.employeeRepository.update(
                 updateEmployeeDto,
@@ -189,7 +194,7 @@ export class EmployeeService {
         };
     }
 
-    async updateValidation(employee: UpdateEmployeeDto) {
+    async updateValidation(employee: UpdateEmployeeDto, id: number) {
         if (!this.validateName(employee.name))
             return {
                 status: "error",
@@ -200,6 +205,12 @@ export class EmployeeService {
             return {
                 status: "error",
                 message: "Invalid e-mail",
+            };
+
+        if (await this.validateIsEmailUniqueUpdate(employee.email, id))
+            return {
+                status: "error",
+                message: "E-mail already in use",
             };
 
         return {
@@ -221,6 +232,15 @@ export class EmployeeService {
     async validateIsEmailUnique(email: string) {
         return await this.employeeRepository.findOne({
             where: { email: email },
+        });
+    }
+
+    async validateIsEmailUniqueUpdate(email: string, id: number) {
+        return await this.employeeRepository.findOne({
+            where: {
+                email: email,
+                id: { [Op.ne]: id },
+            },
         });
     }
 }
