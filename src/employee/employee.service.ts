@@ -142,8 +142,26 @@ export class EmployeeService {
         }
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} employee`;
+    async remove(id: number) {
+        try {
+            const success = await this.employeeRepository.update(
+                {
+                    status: "INACTIVE",
+                },
+                { where: { id } },
+            );
+
+            if (success)
+                return {
+                    status: "success",
+                    message: `Employee with ID ${id} deleted successfully`,
+                };
+        } catch (e) {
+            return {
+                status: "error",
+                message: e.message,
+            };
+        }
     }
 
     async insertValidation(employee: CreateEmployeeDto) {
@@ -163,6 +181,25 @@ export class EmployeeService {
             return {
                 status: "error",
                 message: "E-mail already in use",
+            };
+
+        return {
+            status: "success",
+            message: "Employee ready to insert",
+        };
+    }
+
+    async updateValidation(employee: UpdateEmployeeDto) {
+        if (!this.validateName(employee.name))
+            return {
+                status: "error",
+                message: "Invalid name",
+            };
+
+        if (!this.validateEmail(employee.email))
+            return {
+                status: "error",
+                message: "Invalid e-mail",
             };
 
         return {

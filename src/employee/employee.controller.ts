@@ -38,4 +38,9 @@ export class EmployeeController {
     update(@Param("id") id: string, @Body() updateUserDto: UpdateEmployeeDto) {
         return this.employeeService.update(+id, updateUserDto);
     }
+
+    @Post("delete/:id")
+    delete(@Param("id") id: string) {
+        return this.employeeService.remove(+id);
+    }
 }
